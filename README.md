@@ -1,92 +1,97 @@
-# Webcam face Recognition
+## 프로젝트 정보
 
+- 
 
+[](https://git.huconn.com/topst-project/webcam-face-recognition)
 
-## Getting started
+이 작업은 파이썬으로 수행되었으며, OpenCV Haar Cascade를 사용했습니다.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+VSCode 설치 방법:
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+1. 다음 명령어를 실행하세요: wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+2. packages.microsoft.gpg 파일을 /etc/apt/trusted.gpg.d/ 디렉토리에 복사합니다: sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
+3. 다음 명령어를 실행하여 /etc/apt/sources.list.d/vscode.list 파일을 만듭니다: sudo sh -c 'echo "deb [arch=arm64] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+4. 패키지 목록을 업데이트합니다: sudo apt update
+5. VSCode를 설치합니다: sudo apt install code
 
-## Add your files
+실행 방법:
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+다음 명령어를 입력하세요:
+code --no-sandbox --user-data-dir=/path/to/alternate/user/data/dir
+
+진행 방법:
+
+- pip을 설치하려면 다음 명령을 실행하십시오.
 
 ```
-cd existing_repo
-git remote add origin https://git.huconn.com/topst-project/webcam-face-recognition.git
-git branch -M main
-git push -uf origin main
+sudo apt install python3-pip
+
 ```
 
-## Integrate with your tools
+- Git을 설치하려면 다음 명령을 사용하십시오.
 
-- [ ] [Set up project integrations](https://git.huconn.com/topst-project/webcam-face-recognition/-/settings/integrations)
+```
+sudo apt install git
 
-## Collaborate with your team
+```
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+- 그런 다음 pip를 사용하여 opencv-python을 설치할 수 있습니다.
 
-## Test and Deploy
+```
+pip install opencv-python
 
-Use the built-in continuous integration in GitLab.
+```
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+git clone https://github.com/opencv/opencv.git
 
-***
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1888db3e-6c4c-4913-9133-88fe2c74d89c/Untitled.png)
 
-# Editing this README
+이 경로의 **[haarcascad](https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_eye.xml)es폴더를 파이썬 코드가 있는 폴더로 옮겨야 합니다.**
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+```python
+import cv2
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+def face_eyes(image):
+    cascade_face_detector = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
+    cascade_eye_detector = cv2.CascadeClassifier('haarcascades/haarcascade_eye.xml')
 
-## Name
-Choose a self-explaining name for your project.
+    image_resized = cv2.resize(image, (755, 500))
+    gray = cv2.cvtColor(image_resized, cv2.COLOR_BGR2GRAY)
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+    face_detections = cascade_face_detector.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=4)
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+    for (x, y, w, h) in face_detections:
+        cv2.rectangle(image_resized, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+        roi_gray = gray[y:y+h, x:x+w]
+        roi_color = image_resized[y:y+h, x:x+w]
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+        eye_detections = cascade_eye_detector.detectMultiScale(roi_gray, scaleFactor=1.05, minNeighbors=6, minSize=(10, 10), maxSize=(30, 30))
+        for (ex, ey, ew, eh) in eye_detections:
+            cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (0, 255, 255), 2)
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+    return image_resized
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+print("model load")
+cap = cv2.VideoCapture(1)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 480)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 640)
+print("camera connect")
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+while True:
+    ret, img = cap.read()
+    if not ret:
+        break
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+    result = face_eyes(img)
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+    cv2.imshow('face_eyes', result)
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+cap.release()
+cv2.destroyAllWindows()
+```
 
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+해당 작업은 보드에 웹캠을 연결한 후, 보드에 설치된 vscode를 직접 설치하여 진행합니다.
