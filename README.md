@@ -44,7 +44,7 @@ pip install opencv-python
 
 git clone https://github.com/opencv/opencv.git
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1888db3e-6c4c-4913-9133-88fe2c74d89c/Untitled.png)
+![Alt text](image.png)
 
 이 경로의 **[haarcascad](https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_eye.xml)es폴더를 파이썬 코드가 있는 폴더로 옮겨야 합니다.**
 
